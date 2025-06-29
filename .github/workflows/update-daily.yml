@@ -6,6 +6,9 @@ on:
     - cron: '10 12 * * 2,4,6'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
