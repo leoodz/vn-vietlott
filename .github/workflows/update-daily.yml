@@ -1,0 +1,51 @@
+name: Daily Power6x55 Scrape
+
+on:
+  schedule:
+    # Runs at 12:10 UTC Tuesdays, Thursdays, Saturdays (UTC+7 → ~19:10 local)
+    - cron: '10 12 * * 2,4,6'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install axios cheerio
+
+      - name: Scrape latest draw
+        run: |
+          node -e "
+            const fs = require('fs'), path = require('path');
+            const backfill = require('./scripts/scrapeToday');
+            backfill()
+              .then(o => {
+                const dir = path.join(process.cwd(),'results');
+                if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+                const file = path.join(dir,'power6x55.json');
+                const prev = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : [];
+                if (!prev.find(e=>e.date===o.date)) {
+                  prev.push(o);
+                  fs.writeFileSync(file, JSON.stringify(prev,null,2));
+                  console.log('✅ Saved draw', o.date);
+                } else console.log('ℹ️ Draw already exists', o.date);
+              })
+              .catch(err => { console.error('❗Error scraping:', err); process.exit(1); });
+          "
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/power6x55.json
+          git diff --quiet --cached || git commit -m "📈 Update Power6x55 @ $(date -u +'%Y-%m-%d')" 
+          git push
