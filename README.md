@@ -24,6 +24,7 @@
 
 ## 🗂️ Cấu trúc dự án
 
+```text
 .
 ├── scripts/
 │ └── scrapeToday.js # Lấy kết quả quay thưởng mới nhất
@@ -36,6 +37,7 @@
 │ └── power6x55.json # File chứa kết quả xổ số
 ├── package.json # Danh sách dependencies
 └── README.md # Tài liệu dự án
+```
 
 ---
 
