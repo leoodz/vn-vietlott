@@ -1,92 +1,120 @@
-📊 Vietlott Power6x55 Scraper
-Dự án này thu thập kết quả xổ số Power 6/55 của Vietlott từ website Minh Ngọc từ ngày 01‑08‑2017 đến hiện tại, lưu trữ dữ liệu số trúng thưởng và giải thưởng vào file JSON, đồng thời tự động cập nhật hàng tuần thông qua GitHub Actions.
+# 📊 Vietlott Power 6/55 Scraper
 
-🚀 Tính năng chính
-Backfill toàn bộ từ 01‑08‑2017 đến hiện tại, với:
+**Vietlott Power 6/55 Scraper** là một dự án mã nguồn mở thu thập **kết quả xổ số Vietlott Power 6/55** từ trang web **Minh Ngọc**, bắt đầu từ **01/08/2017** đến hiện tại. Dữ liệu bao gồm các con số trúng thưởng, số phụ và chi tiết các giải thưởng được lưu trữ trong file **JSON**. Hệ thống hỗ trợ **tự động cập nhật định kỳ hàng tuần** thông qua **GitHub Actions**.
 
-Ngày quay (date)
+---
 
-6 số chính (numbers)
+## 🚀 Tính năng chính
 
-Số phụ (bonus)
+- ✅ **Backfill toàn bộ lịch sử** từ 01/08/2017 đến nay
+- 🔢 Lưu dữ liệu chi tiết:
+  - Ngày quay thưởng (`date`)
+  - 6 số chính (`numbers`)
+  - Số phụ (`bonus`)
+  - Thông tin các giải thưởng:
+    - Jackpot 1 & 2
+    - Giải nhất, nhì, ba (số lượng & giá trị)
+- 📅 **Tự động cập nhật** dữ liệu mới vào mỗi **Thứ Ba, Năm, Bảy lúc 18:10 (GMT+7)** (tương đương 11:10 UTC)
+- 🔓 **Dữ liệu JSON công khai**, có thể sử dụng cho:
+  - Báo cáo
+  - Phân tích thống kê
+  - Trực quan hóa dữ liệu (data viz)
 
-Thông tin giải thưởng (Jackpot 1, Jackpot 2, Giải nhất, nhì, ba), gồm số lượng trúng và giá trị từng giải.
+---
 
-Cập nhật tự động theo lịch (cron job): mỗi thứ Ba, Năm, Bảy vào khung giờ sau quay (UTC+7), dòng mới sẽ được thêm vào JSON nếu chưa có.
+## 🗂️ Cấu trúc dự án
 
-Mở data JSON công khai: mọi người có thể clone repo hoặc truy cập raw JSON để sử dụng phục vụ báo cáo, phân tích, hiển thị trực quan,...
-
-🗂️ Cấu trúc dự án
+.
 ├── scripts/
-│   └── scrapeToday.js       # Lấy dữ liệu draw hôm nay
-├── backfill.js             # Chạy 1 lần để lấy dữ liệu lịch sử
+│ └── scrapeToday.js # Lấy kết quả quay thưởng mới nhất
+├── backfill.js # Lấy toàn bộ dữ liệu lịch sử
 ├── .github/
-│   └── workflows/
-│       ├── backfill.yml    # (tuỳ chọn) Automation backfill
-│       └── update-daily.yml # GitHub Action cập nhật hàng tuần
+│ └── workflows/
+│ ├── backfill.yml # (Tuỳ chọn) Tự động backfill qua GitHub Actions
+│ └── update-daily.yml # Cập nhật định kỳ vào T3/T5/T7
 ├── results/
-│   └── power6x55.json      # Kết quả xổ số
-├── package.json
-└── README.md               # File này
-📦 Cài đặt & sử dụng
-Clone repo:
+│ └── power6x55.json # File chứa kết quả xổ số
+├── package.json # Danh sách dependencies
+└── README.md # Tài liệu dự án
 
-bash
-Copy
-Edit
-git clone https://github.com/<tên‑repo>.git
-cd <tên‑repo>
-Cài dependencies:
+---
 
+## 📦 Cài đặt & sử dụng
+
+### 1. Clone dự án
+
+```bash
+git clone https://github.com/leoodz/vn-vietlott.git
+cd vn-vietlott
+```
+2. Cài đặt dependencies
+```bash
 npm install axios cheerio
-Backfill toàn bộ:
+```
 
-bash
-Copy
-Edit
-node backfill.js
-→ Kết quả sẽ được lưu tại results/power6x55.json.
+🤖 GitHub Actions
+Workflow tự động (update-daily.yml) đã được cấu hình để chạy vào:
 
-Chạy cập nhật thủ công:
+Thứ Ba, Năm, Bảy lúc 11:10 UTC (~18:10 GMT+7)
 
-bash
-Copy
-Edit
-node -e "require('./scripts/scrapeToday')().then(console.log).catch(console.error)"
-Thiết lập GitHub Actions:
+Bạn chỉ cần push code lên GitHub, mọi thứ sẽ chạy tự động.
 
-.github/workflows/update-daily.yml đã cấu hình để chạy thái thứ Ba/Năm/Bảy lúc ~19:10 giờ VN. Bạn chỉ cần push lên repo.
-
-📄 Cấu trúc JSON mẫu
+🧪 Cấu trúc JSON mẫu
+```json
 [
   {
     "date": "28-06-2025",
-    "numbers": ["08","11","13","20","45","50"],
+    "numbers": ["08", "11", "13", "20", "45", "50"],
     "bonus": "25",
     "prizes": {
-      "jackpot1": { "count": 0, "amount": "300,000,000,000đ" },
-      "jackpot2": { "count": 2, "amount": "6,115,269,375đ" },
-      "giai_nhat": { "count": 37, "amount": "40,000,000đ" },
-      "giai_nhi": { "count": 2132, "amount": "500,000đ" },
-      "giai_ba": { "count": 46933, "amount": "50,000đ" }
+      "jackpot1": {
+        "count": 0,
+        "amount": "300,000,000,000đ"
+      },
+      "jackpot2": {
+        "count": 2,
+        "amount": "6,115,269,375đ"
+      },
+      "giai_nhat": {
+        "count": 37,
+        "amount": "40,000,000đ"
+      },
+      "giai_nhi": {
+        "count": 2132,
+        "amount": "500,000đ"
+      },
+      "giai_ba": {
+        "count": 46933,
+        "amount": "50,000đ"
+      }
     }
   },
-  {...}
+  ...
 ]
+```
+
+🌐 Giao diện web để tra cứu và tham gia cùng cộng đồng:
+```https://leoodz.dev/tools/lottery-predictor```
+
 🎯 Kế hoạch tương lai
-🚀 Mở rộng: Thu thập thêm Jackpot 3, giải đặc biệt nếu có.
+🔍 Thu thập thêm dữ liệu Jackpot 3 nếu có
 
-⏰ Tích hợp Slack/Telegram bot để thông báo khi có kết quả mới.
+📩 Tích hợp bot Slack/Telegram thông báo khi có kết quả mới
+Truy vấn theo ngày
 
-🛠 Trang web cho phép truy vấn theo ngày hoặc export CSV.
+Xuất dữ liệu ra CSV
 
-☁️ Triển khai kèm Docker hoặc trên VPS.
+🐳 Tạo Docker image cho triển khai đơn giản
 
-🤝 Góp ý & Phát triển
-Clone và gửi PR nếu bạn muốn đóng góp.
+☁️ Triển khai VPS/public API phục vụ cộng đồng
 
-Mọi issue hoặc đề xuất feature vui lòng mở ở mục Issues.
+🤝 Góp ý & Đóng góp
+Fork & PR nếu bạn muốn thêm tính năng hoặc tối ưu code
+
+Mọi lỗi hoặc đề xuất, vui lòng tạo issue tại đây
 
 🪪 Giấy phép
-Dự án mã nguồn mở miễn phí. Bạn có thể sử dụng, chỉnh sửa và phân phối lại theo nhãn MIT.
+Dự án được phát hành theo giấy phép MIT License.
+Tự do sử dụng, chia sẻ và chỉnh sửa — miễn bạn giữ lại credit!
 
+Made with 💙 by @leoodz
