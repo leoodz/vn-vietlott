@@ -14,7 +14,7 @@
   - Thông tin các giải thưởng:
     - Jackpot 1 & 2
     - Giải nhất, nhì, ba (số lượng & giá trị)
-- 📅 **Tự động cập nhật** dữ liệu mới vào mỗi **Thứ Ba, Năm, Bảy lúc 18:10 (GMT+7)** (tương đương 11:10 UTC)
+- 📅 **Tự động cập nhật** dữ liệu mới vào mỗi **Thứ Ba, Năm, Bảy lúc 18:35 (GMT+7)** (tương đương 11:35 UTC)
 - 🔓 **Dữ liệu JSON công khai**, có thể sử dụng cho:
   - Báo cáo
   - Phân tích thống kê
